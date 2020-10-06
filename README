@@ -1,0 +1,54 @@
+# ############################################################# #
+#                 SELENIUM GRID - FOR TESTS                     #
+# ############################################################# #
+# @author Yuri Fialho                                           #
+# @since 28/04/2020                                             #
+#################################################################
+
+1. PRE-REQUISITOS
+  1.1 DOCKER 
+  1.2 DOCKER COMPOSE
+
+2. INICIANDO O HUB - SELENIUM GRID
+  O hub esta configurado para operar tanto com Chrome como com o Firefox, caso
+  seja necessários outros browser deverá ser incluido no docker-compose.yml.
+
+  2.1 docker-compose -f .\selenium-hub-compose.yml up
+
+  2.2 Após iniciado verifique se o serviço está no ar pela seguinte url: http://localhost:4444/wd/hub/status
+
+  2.3 Dever aparecer algo semelhante a isso:
+
+  {
+  "status": 0,
+  "value": {
+    "ready": true,
+    "message": "Hub has capacity",
+    "build": {
+      "revision": "e82be7d358",
+      "time": "2018-11-14T08:25:53",
+      "version": "3.141.59"
+    },
+    "os": {
+      "arch": "amd64",
+      "name": "Linux",
+      "version": "4.19.76-linuxkit"
+    },
+    "java": {
+      "version": "1.8.0_242"
+    }
+  }
+}
+
+3. BUILD DA IMAGEM DO RUNNER DO SELENIUM - PYTHON(OU USE A VERSAO DISPONÍVEL NO DOCKER HUB)
+  3.1  docker build -t yurirfialho/selenium-runner-python ./docker
+
+4. EXECUTANDO OS TESTE
+  4.1 Antes de mais nada deverá está configurado no teste para uso remoto, ou seja para executar no hub. Dentro da pastar teste há um arquivo chamdo "test.py" nele há um exemplo bem simples de como utilizar.
+  4.2 Executando:
+    4.2.1 Windows: docker run -it --network container:selenium-hub -v C:/Users/Fulano/Desktop/TESTES_SELENIUM/teste:/code yurirfialho/selenium-runner-python "test.py"
+    4.2.2 Linux: docker run -it --network container:selenium-hub -v ./teste:/code yurirfialho/selenium-runner-python "test.py"
+
+5. RESULTADO
+  5.1 Será exibido o resultado na tela de log de execução
+  5.2 Também será criando um relatório Allure em formato .json com o resultado dos testes executados.
